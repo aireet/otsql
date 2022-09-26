@@ -3,6 +3,8 @@ package otsql
 import (
 	"context"
 	"time"
+
+	gaea "github.com/XiaoMi/Gaea/mysql"
 )
 
 type Hook interface {
@@ -51,6 +53,7 @@ type Event struct {
 
 	Method  Method
 	Query   string
+	Md5     string
 	Args    interface{}
 	BeginAt time.Time
 
@@ -62,7 +65,8 @@ type Event struct {
 }
 
 func newEvent(o *Options, conn string, method Method, query string, args interface{}) *Event {
-	return &Event{
+
+	e := &Event{
 		Instance: o.Instance,
 		Database: o.Database,
 
@@ -72,4 +76,12 @@ func newEvent(o *Options, conn string, method Method, query string, args interfa
 		Args:    args,
 		BeginAt: time.Now(),
 	}
+
+	if o.SQLMd5 {
+		e.Md5 = gaea.GetMd5(
+			gaea.GetFingerprint(query),
+		)
+	}
+
+	return e
 }

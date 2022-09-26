@@ -33,6 +33,9 @@ type Options struct {
 	// ResetSessionB, if set to true, will enable the hook of ResetSession calls.
 	ResetSessionB bool
 
+	// SQLMd5, if set to true, will enable the canonical trasnformations to md5 of query calls
+	SQLMd5 bool
+
 	// Hooks, enabled hooks.
 	Hooks []Hook
 }
@@ -107,6 +110,13 @@ func WithLastInsertID(b bool) Option {
 func WithResetSession(b bool) Option {
 	return func(o *Options) {
 		o.ResetSessionB = b
+	}
+}
+
+// WithSQLMd5 if set to true, will enable the canonical trasnformations to md5 of query calls
+func WithSQLMd5(b bool) Option {
+	return func(o *Options) {
+		o.SQLMd5 = b
 	}
 }
 
